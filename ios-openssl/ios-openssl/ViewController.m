@@ -19,7 +19,7 @@
 {
     [super viewDidLoad];
 	[[SSLConnection Instance] initWithUrl:@"https://paypal.com" withDelegate:self withFormat:@"application/json"];
-    [[SSLConnection Instance] sendPostAsync:@""];
+    [[SSLConnection Instance] sendPostAsync:@"{\"id\":21}"];
 }
 
 - (void) SSLConnection:(SSLConnection *)_sslConnection didReceiveString:(NSString *)string
