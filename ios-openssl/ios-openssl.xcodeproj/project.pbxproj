@@ -18,6 +18,8 @@
 		68A09B24173CC06800245E9B /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 68A09B23173CC06800245E9B /* Default-568h@2x.png */; };
 		68A09B27173CC06800245E9B /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 68A09B25173CC06800245E9B /* MainStoryboard.storyboard */; };
 		68A09B2A173CC06800245E9B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A09B29173CC06800245E9B /* ViewController.m */; };
+		68A09B35173CC32200245E9B /* SSLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A09B34173CC32100245E9B /* SSLConnection.m */; };
+		68A09B43173CE1EE00245E9B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68A09B42173CE1EE00245E9B /* Security.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,9 @@
 		68A09B26173CC06800245E9B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
 		68A09B28173CC06800245E9B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		68A09B29173CC06800245E9B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		68A09B33173CC32100245E9B /* SSLConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSLConnection.h; sourceTree = "<group>"; };
+		68A09B34173CC32100245E9B /* SSLConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSLConnection.m; sourceTree = "<group>"; };
+		68A09B42173CE1EE00245E9B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				68A09B43173CE1EE00245E9B /* Security.framework in Frameworks */,
 				68A09B0E173CC06800245E9B /* UIKit.framework in Frameworks */,
 				68A09B10173CC06800245E9B /* Foundation.framework in Frameworks */,
 				68A09B12173CC06800245E9B /* CoreGraphics.framework in Frameworks */,
@@ -56,6 +62,7 @@
 		68A09AFE173CC06800245E9B = {
 			isa = PBXGroup;
 			children = (
+				68A09B42173CE1EE00245E9B /* Security.framework */,
 				68A09B13173CC06800245E9B /* ios-openssl */,
 				68A09B0C173CC06800245E9B /* Frameworks */,
 				68A09B0A173CC06800245E9B /* Products */,
@@ -89,6 +96,8 @@
 				68A09B28173CC06800245E9B /* ViewController.h */,
 				68A09B29173CC06800245E9B /* ViewController.m */,
 				68A09B14173CC06800245E9B /* Supporting Files */,
+				68A09B33173CC32100245E9B /* SSLConnection.h */,
+				68A09B34173CC32100245E9B /* SSLConnection.m */,
 			);
 			path = "ios-openssl";
 			sourceTree = "<group>";
@@ -176,6 +185,7 @@
 				68A09B1A173CC06800245E9B /* main.m in Sources */,
 				68A09B1E173CC06800245E9B /* AppDelegate.m in Sources */,
 				68A09B2A173CC06800245E9B /* ViewController.m in Sources */,
+				68A09B35173CC32200245E9B /* SSLConnection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

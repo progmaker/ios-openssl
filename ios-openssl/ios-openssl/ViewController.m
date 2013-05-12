@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 
+
 @interface ViewController ()
 
 @end
@@ -17,7 +18,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+	[[SSLConnection Instance] initWithUrl:@"https://paypal.com" withDelegate:self withFormat:@"application/json"];
+    [[SSLConnection Instance] sendPostAsync:@""];
+}
+
+- (void) SSLConnection:(SSLConnection *)_sslConnection didReceiveString:(NSString *)string
+{
+    NSLog(@"response: %@", string);
 }
 
 - (void)didReceiveMemoryWarning
