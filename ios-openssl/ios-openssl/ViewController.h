@@ -10,6 +10,8 @@
 #import "SSLConnection.h"
 
 @interface ViewController : UIViewController<SSLConnectionDelegate>
+@property (weak, nonatomic) IBOutlet UIWebView *webView;
+
 
 
 

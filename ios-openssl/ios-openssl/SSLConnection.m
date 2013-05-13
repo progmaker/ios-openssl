@@ -87,15 +87,66 @@ static SSLConnection* _instance;
 {
     @try {
         NSLog(@"Authentication challenge");
+        
+        if ([challenge previousFailureCount] > 0) {
+            //this will cause an authentication failure
+            [[challenge sender] cancelAuthenticationChallenge:challenge];
+            NSLog(@"Bad Username Or Password");
+            return;
+        }
+        
         if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
             NSURLCredential* credentials = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+            SecTrustResultType result;
+            SecTrustEvaluate(challenge.protectionSpace.serverTrust, &result);
             
-            //print server certificate in console
-            printCertificate(extractCertificate(challenge));
-           
+            if(result == kSecTrustResultProceed || result == kSecTrustResultConfirm ||  result == kSecTrustResultUnspecified) {
+                
+                //print server certificate in console
+                printCertificate(extractCertificate(challenge));
+
                 //if ([trustedHosts containsObject:challenge.protectionSpace.host]){}
-            [challenge.sender useCredential:credentials forAuthenticationChallenge:challenge];
-            [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+                [challenge.sender useCredential:credentials forAuthenticationChallenge:challenge];
+                [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
+                
+            }
+        }
+        else if ([[challenge protectionSpace] authenticationMethod] == NSURLAuthenticationMethodClientCertificate) {
+             NSString *p12Path = [[NSBundle mainBundle] pathForResource:@"CertificateName" ofType:@"p12"];
+            NSData *p12Data = [[NSData alloc] initWithContentsOfFile:p12Path];
+            
+            CFStringRef password = CFSTR("PASSWORD");
+            const void *keys[] = { kSecImportExportPassphrase };
+            const void *values[] = { password };
+            CFDictionaryRef optionsDictionary = CFDictionaryCreate(NULL, keys, values, 1, NULL, NULL);
+            CFArrayRef p12Items;
+            
+            OSStatus result = SecPKCS12Import((__bridge CFDataRef)p12Data, optionsDictionary, &p12Items);
+            
+            if(result == noErr) {
+                CFDictionaryRef identityDict = CFArrayGetValueAtIndex(p12Items, 0);
+                SecIdentityRef identityApp =(SecIdentityRef)CFDictionaryGetValue(identityDict,kSecImportItemIdentity);
+                
+                SecCertificateRef certRef;
+                SecIdentityCopyCertificate(identityApp, &certRef);
+                
+                SecCertificateRef certArray[1] = { certRef };
+                CFArrayRef myCerts = CFArrayCreate(NULL, (void *)certArray, 1, NULL);
+                CFRelease(certRef);
+                
+                NSURLCredential *credential = [NSURLCredential credentialWithIdentity:identityApp certificates:(__bridge NSArray *)myCerts persistence:NSURLCredentialPersistencePermanent];
+                CFRelease(myCerts);
+                
+                [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
+            }
+        } else if ([[challenge protectionSpace] authenticationMethod] == NSURLAuthenticationMethodDefault || [[challenge protectionSpace] authenticationMethod] == NSURLAuthenticationMethodNTLM) {
+            // For normal authentication based on username and password. This could be NTLM or Default.
+            
+            NSURLCredential *credential = [NSURLCredential credentialWithUser:@"username" password:@"password" persistence:NSURLCredentialPersistenceForSession];
+            [[challenge sender] useCredential:credential forAuthenticationChallenge:challenge];
+        } else {
+            //If everything fails, we cancel the challenge.
+            [[challenge sender] cancelAuthenticationChallenge:challenge];
         }
     } @catch(NSException *e) {
         
@@ -164,6 +215,37 @@ void printCertificate(SecCertificateRef certRef)
     } else {
         NSLog(@"Failed  data from CertificateRef");
     }
+}
+
+
+OSStatus extractIdentityAndTrust(CFDataRef inP12data, SecIdentityRef *identity, SecTrustRef *trust)
+{
+    OSStatus securityError = errSecSuccess;
+    
+    CFStringRef password = CFSTR("PASSWORD");
+    const void *keys[] = { kSecImportExportPassphrase };
+    const void *values[] = { password };
+    
+    CFDictionaryRef options = CFDictionaryCreate(NULL, keys, values, 1, NULL, NULL);
+    
+    CFArrayRef items = CFArrayCreate(NULL, 0, 0, NULL);
+    securityError = SecPKCS12Import(inP12data, options, &items);
+    
+    if (securityError == 0) {
+        CFDictionaryRef myIdentityAndTrust = CFArrayGetValueAtIndex(items, 0);
+        const void *tempIdentity = NULL;
+        tempIdentity = CFDictionaryGetValue(myIdentityAndTrust, kSecImportItemIdentity);
+        *identity = (SecIdentityRef)tempIdentity;
+        const void *tempTrust = NULL;
+        tempTrust = CFDictionaryGetValue(myIdentityAndTrust, kSecImportItemTrust);
+        *trust = (SecTrustRef)tempTrust;
+    }
+    
+    if (options) {
+        CFRelease(options);
+    }
+    
+    return securityError;
 }
 
 

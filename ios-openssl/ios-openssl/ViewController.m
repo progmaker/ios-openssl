@@ -15,6 +15,7 @@
 
 @implementation ViewController
 
+@synthesize webView;
 
 - (void)viewDidLoad
 {
@@ -25,7 +26,8 @@
 
 - (void) SSLConnection:(SSLConnection *)_sslConnection didReceiveString:(NSString *)string
 {
-   // NSLog(@"response: %@", string);
+    NSLog(@"response: %@", string);
+    [webView loadHTMLString:[string description] baseURL:nil];
 }
 
 - (void)didReceiveMemoryWarning
