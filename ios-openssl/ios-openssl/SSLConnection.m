@@ -7,6 +7,9 @@
 //
 
 #import "SSLConnection.h"
+#import <openssl/x509.h>
+#import <openssl/bio.h>
+#import <openssl/err.h>
 
 @implementation SSLConnection
 
@@ -86,6 +89,10 @@ static SSLConnection* _instance;
         NSLog(@"Authentication challenge");
         if ([challenge.protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust]) {
             NSURLCredential* credentials = [NSURLCredential credentialForTrust:challenge.protectionSpace.serverTrust];
+            
+            //print server certificate in console
+            printCertificate(extractCertificate(challenge));
+           
                 //if ([trustedHosts containsObject:challenge.protectionSpace.host]){}
             [challenge.sender useCredential:credentials forAuthenticationChallenge:challenge];
             [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
@@ -124,6 +131,39 @@ static SSLConnection* _instance;
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
         NSLog(@"connectionDidFinishLoading");
+}
+
+
+SecCertificateRef extractCertificate(NSURLAuthenticationChallenge* challenge)
+{
+    SecTrustResultType trustResult;
+    SecTrustRef currentServerTrust = challenge.protectionSpace.serverTrust;
+    SecTrustEvaluate(currentServerTrust, &trustResult);
+    CFIndex certificateCount = SecTrustGetCertificateCount(currentServerTrust);
+    SecCertificateRef certRef = SecTrustGetCertificateAtIndex(currentServerTrust, (certificateCount - 1));
+    return certRef;
+}
+
+void printCertificate(SecCertificateRef certRef)
+{
+    CFDataRef data = SecCertificateCopyData(certRef);
+    X509 *x509cert = NULL;
+    if (data) {
+        BIO *mem = BIO_new_mem_buf((void *)CFDataGetBytePtr(data), CFDataGetLength(data));
+        
+        x509cert = d2i_X509_bio(mem, NULL);
+        
+        X509_print_fp(stdout,x509cert);
+        BIO_free(mem);
+        CFRelease(data);
+        
+        if (!x509cert) {
+            NSLog(@"couldn't parse X509 Certificate");
+            
+        }
+    } else {
+        NSLog(@"Failed  data from CertificateRef");
+    }
 }
 
 

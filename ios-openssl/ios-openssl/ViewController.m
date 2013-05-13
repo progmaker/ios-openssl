@@ -15,16 +15,17 @@
 
 @implementation ViewController
 
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	[[SSLConnection Instance] initWithUrl:@"https://paypal.com" withDelegate:self withFormat:@"application/json"];
-    [[SSLConnection Instance] sendPostAsync:@"{\"id\":21}"];
+	[SSLConnection.Instance initWithUrl:@"https://paypal.com" withDelegate:self withFormat:@"application/json"];
+    [SSLConnection.Instance sendPostAsync:@"{\"id\":21}"];
 }
 
 - (void) SSLConnection:(SSLConnection *)_sslConnection didReceiveString:(NSString *)string
 {
-    NSLog(@"response: %@", string);
+   // NSLog(@"response: %@", string);
 }
 
 - (void)didReceiveMemoryWarning

@@ -20,6 +20,9 @@
 		68A09B2A173CC06800245E9B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A09B29173CC06800245E9B /* ViewController.m */; };
 		68A09B35173CC32200245E9B /* SSLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A09B34173CC32100245E9B /* SSLConnection.m */; };
 		68A09B43173CE1EE00245E9B /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68A09B42173CE1EE00245E9B /* Security.framework */; };
+		68A09B4C1740CC0A00245E9B /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 68A09B4A1740CC0A00245E9B /* libcrypto.a */; };
+		68A09B4D1740CC0A00245E9B /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 68A09B4B1740CC0A00245E9B /* libssl.a */; };
+		68A09B4F1740CC2800245E9B /* include in Resources */ = {isa = PBXBuildFile; fileRef = 68A09B4E1740CC2800245E9B /* include */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +45,9 @@
 		68A09B33173CC32100245E9B /* SSLConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SSLConnection.h; sourceTree = "<group>"; };
 		68A09B34173CC32100245E9B /* SSLConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SSLConnection.m; sourceTree = "<group>"; };
 		68A09B42173CE1EE00245E9B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		68A09B4A1740CC0A00245E9B /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
+		68A09B4B1740CC0A00245E9B /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libssl.a; sourceTree = "<group>"; };
+		68A09B4E1740CC2800245E9B /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,6 +59,8 @@
 				68A09B0E173CC06800245E9B /* UIKit.framework in Frameworks */,
 				68A09B10173CC06800245E9B /* Foundation.framework in Frameworks */,
 				68A09B12173CC06800245E9B /* CoreGraphics.framework in Frameworks */,
+				68A09B4C1740CC0A00245E9B /* libcrypto.a in Frameworks */,
+				68A09B4D1740CC0A00245E9B /* libssl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +70,7 @@
 		68A09AFE173CC06800245E9B = {
 			isa = PBXGroup;
 			children = (
+				68A09B4E1740CC2800245E9B /* include */,
 				68A09B42173CE1EE00245E9B /* Security.framework */,
 				68A09B13173CC06800245E9B /* ios-openssl */,
 				68A09B0C173CC06800245E9B /* Frameworks */,
@@ -80,6 +89,8 @@
 		68A09B0C173CC06800245E9B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				68A09B4A1740CC0A00245E9B /* libcrypto.a */,
+				68A09B4B1740CC0A00245E9B /* libssl.a */,
 				68A09B0D173CC06800245E9B /* UIKit.framework */,
 				68A09B0F173CC06800245E9B /* Foundation.framework */,
 				68A09B11173CC06800245E9B /* CoreGraphics.framework */,
@@ -172,6 +183,7 @@
 				68A09B22173CC06800245E9B /* Default@2x.png in Resources */,
 				68A09B24173CC06800245E9B /* Default-568h@2x.png in Resources */,
 				68A09B27173CC06800245E9B /* MainStoryboard.storyboard in Resources */,
+				68A09B4F1740CC2800245E9B /* include in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,7 +245,9 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/include\"";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/\"";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
@@ -254,7 +268,9 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/include\"";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				LIBRARY_SEARCH_PATHS = "\"$(SRCROOT)/\"";
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -267,6 +283,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ios-openssl/ios-openssl-Prefix.pch";
 				INFOPLIST_FILE = "ios-openssl/ios-openssl-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -278,6 +298,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ios-openssl/ios-openssl-Prefix.pch";
 				INFOPLIST_FILE = "ios-openssl/ios-openssl-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

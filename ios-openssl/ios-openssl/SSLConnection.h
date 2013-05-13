@@ -20,6 +20,8 @@
     id<SSLConnectionDelegate> delegate;
 }
 
+@property SSLConnection* Instance;
+
 + (SSLConnection*) Instance;
 - (void) initWithUrl:(NSString*)_url withDelegate:(id)_delegate withFormat:(NSString*) _format;
 - (void) sendPostAsync:(NSString *) requestData;
