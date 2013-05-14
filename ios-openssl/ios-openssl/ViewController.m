@@ -20,7 +20,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	[SSLConnection.Instance initWithUrl:@"https://github.com" withDelegate:self withFormat:@"application/json"];
+	[SSLConnection.Instance initWithUrl:@"https://paypal.com" withDelegate:self withFormat:@"application/json"];
     [SSLConnection.Instance sendPostAsync:@"{\"id\":21}"];
 }
 
