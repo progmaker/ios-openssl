@@ -21,6 +21,7 @@
 }
 
 @property SSLConnection* Instance;
+@property NSArray* currentCookies;
 
 + (SSLConnection*) Instance;
 - (void) initWithUrl:(NSString*)_url withDelegate:(id)_delegate withFormat:(NSString*) _format;

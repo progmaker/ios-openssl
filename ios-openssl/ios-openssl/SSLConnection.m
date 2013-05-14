@@ -12,7 +12,7 @@
 #import <openssl/err.h>
 
 @implementation SSLConnection
-
+@synthesize currentCookies;
 
 static SSLConnection* _instance;
 + (SSLConnection*) Instance
@@ -45,6 +45,14 @@ static SSLConnection* _instance;
         [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
         [request setValue:format forHTTPHeaderField:@"Content-Type"];
         [request setHTTPBody: postData];
+        
+        [request setHTTPShouldHandleCookies:YES];
+        if(self.currentCookies != nil){
+            [request setAllHTTPHeaderFields:
+             [NSHTTPCookie requestHeaderFieldsWithCookies:
+              self.currentCookies]];
+        }
+   
         
         NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
         [connection start];
@@ -163,8 +171,11 @@ static SSLConnection* _instance;
 }
 
 
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSHTTPURLResponse *)response
 {
+       self.currentCookies = [NSHTTPCookie
+                           cookiesWithResponseHeaderFields:[response allHeaderFields]
+                           forURL:url];
         NSLog(@"didReceiveResponse");
 }
 
@@ -194,6 +205,7 @@ SecCertificateRef extractCertificate(NSURLAuthenticationChallenge* challenge)
     SecCertificateRef certRef = SecTrustGetCertificateAtIndex(currentServerTrust, (certificateCount - 1));
     return certRef;
 }
+
 
 void printCertificate(SecCertificateRef certRef)
 {
